@@ -12,42 +12,32 @@ import {withStyles} from '@material-ui/core/styles';
 const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: "auto"
   },
   table: {
     minWidth: 1080
   }
-})
-
-const customers = [
-  {
-    'id':1,
-    'image':'https://placeimg.com/64/64/1',
-    'name': '김준성',
-    'birthday': '880420',
-    'gender': '남자',
-    'job': '프로그래머'
-  },
-  {
-    'id':2,
-    'image':'https://placeimg.com/64/64/2',
-    'name': '박정하',
-    'birthday': '930902',
-    'gender': '여자',
-    'job': '프로그래머'
-  },
-  {
-    'id':3,
-    'image':'https://placeimg.com/64/64/3',
-    'name': '김새봄',
-    'birthday': '910111',
-    'gender': '여자',
-    'job': '프로그래머'
-  }
-]
+});
 
 class App extends Component{
+
+  state = {
+    customers: ""
+  }
+
+  componentDidMount(){
+    this.callApi()
+      .then(res => this.setState({customers: res}))
+      .catch(err => console.log(err))
+  }
+
+  callApi = async() => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
   render (){
     const { classes } = this.props;
     return (
@@ -63,23 +53,7 @@ class App extends Component{
               <TableCell>직업</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-        {
-          customers.map(c => {
-            return(
-              <Customer 
-                key={c.id}
-                id={c.id}
-                image={c.image}
-                name={c.name}
-                birthday={c.birthday}
-                gender={c.gender}
-                job={c.job}
-                />
-            )
-          })
-        }
-          </TableBody>
+          <TableBody>{this.state.customers ? this.state.customers.map(c => { return( <Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />)}) : "데이터 로딩중..."}</TableBody>
         </Table>
       </Paper>
     )
