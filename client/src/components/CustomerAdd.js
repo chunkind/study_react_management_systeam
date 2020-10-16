@@ -36,6 +36,7 @@ class CustomerAdd extends React.Component{
         this.addCustomer()
             .then((response) => {
                 console.log(response.data);
+                this.props.stateRefresh();
             }).catch(err => console.log("customeradd err : " + err))
         this.setState({
             file: null,
@@ -44,8 +45,7 @@ class CustomerAdd extends React.Component{
             gender: '',
             job: '',
             fileName: ''
-        });
-        //window.location.reload();
+        })
     }
 
     handleFileChange = (e) => {
